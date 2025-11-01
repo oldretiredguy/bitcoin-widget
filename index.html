@@ -24,10 +24,29 @@
       height: 100%;
       box-sizing: border-box;
     }
-    .label { font-size: 9px; color: #222; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; }
-    .price { font-size: 15px; font-weight: 700; color: #000; margin: 2px 0 1px 0; white-space: nowrap; }
-    .change { font-size: 9px; margin: 0; }
-    .time { font-size: 8px; color: #333; margin: 0; }
+    .label { 
+      font-size: 9px; 
+      color: #222; 
+      text-transform: uppercase; 
+      letter-spacing: 0.05em; 
+      margin: 0; 
+    }
+    .price { 
+      font-size: 15px; 
+      font-weight: 700; 
+      color: #000; 
+      margin: 2px 0 1px 0; 
+      white-space: nowrap; 
+    }
+    .change { 
+      font-size: 9px; 
+      margin: 0; 
+    }
+    .time { 
+      font-size: 8px; 
+      color: #333; 
+      margin: 0; 
+    }
   </style>
 </head>
 <body>
@@ -39,37 +58,39 @@
   </div>
 
   <script>
-  async function updatePrice() {
-    try {
-      // Use your Cloudflare Worker as a CORS-safe proxy
-      const response = await fetch("https://btcproxy.7597ydk2m6.workers.dev/");
-      const data = await response.json();
+    async function updatePrice() {
+      try {
+        // Fetch from your Cloudflare Worker proxy
+        const response = await fetch("https://btcproxy.7597ydk2m6.workers.dev/?vs=aud");
+        const data = await response.json();
+        
+        const price = data.bitcoin.aud;
+        const change = data.bitcoin.aud_24h_change ?? 0;
 
-      const price = data.bitcoin.aud;
-      const change = data.bitcoin.aud_24h_change;
+        // Update display
+        document.getElementById("price").textContent =
+          "$" + price.toLocaleString("en-AU", { maximumFractionDigits: 0 }) + " AUD";
 
-      document.getElementById("price").textContent =
-        "$" + price.toLocaleString("en-AU", { maximumFractionDigits: 0 }) + " AUD";
+        const chg = document.getElementById("change");
+        chg.textContent = (change >= 0 ? "+" : "") + change.toFixed(2) + "% (24h)";
+        chg.style.color = change >= 0 ? "#006400" : "#b22222";
 
-      const chg = document.getElementById("change");
-      chg.textContent = (change >= 0 ? "+" : "") + change.toFixed(2) + "% (24h)";
-      chg.style.color = change >= 0 ? "#006400" : "#b22222";
-
-      const now = new Date();
-      document.getElementById("time").textContent =
-        "Updated " + now.toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit" });
-    } catch (err) {
-      document.getElementById("price").textContent = "⚠️ Connection blocked";
-      document.getElementById("change").textContent = "";
+        const now = new Date();
+        document.getElementById("time").textContent =
+          "Updated " + now.toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit" });
+      } catch (err) {
+        document.getElementById("price").textContent = "⚠️ Connection blocked";
+        document.getElementById("change").textContent = "";
+        document.getElementById("time").textContent = "";
+      }
     }
-  }
 
-  updatePrice();
-  setInterval(updatePrice, 60_000);
-</script>
-
+    updatePrice();
+    setInterval(updatePrice, 60_000); // Refresh once per minute
+  </script>
 </body>
 </html>
+
 
 
 
