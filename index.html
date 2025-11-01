@@ -10,7 +10,6 @@
       margin: 0;
       background: transparent;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Arial, sans-serif;
-      color: #111;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -20,32 +19,34 @@
       height: 100%;
       box-sizing: border-box;
       padding: 4px;
-      background: rgba(255,255,255,0.55);
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(6px);
       border-radius: 8px;
       text-align: center;
       line-height: 1.1;
     }
     .label {
-      margin: 0;
+      font-size: 8px;
       text-transform: uppercase;
-      font-size: 9px;
-      color: #333;
+      letter-spacing: 0.06em;
+      color: #222;
+      margin: 0;
     }
     .price {
-      margin: 1px 0 0 0;
+      font-size: 16px;
       font-weight: 700;
-      font-size: 18px; /* tuned to fit Start.me tiles */
-      color: #111;
+      color: #000;
+      margin: 2px 0 0 0;
       white-space: nowrap;
     }
     .change {
+      font-size: 8px;
       margin: 1px 0 0 0;
-      font-size: 9px;
     }
     .time {
+      font-size: 7px;
+      color: #333;
       margin: 0;
-      font-size: 8px;
-      color: #555;
     }
   </style>
 </head>
@@ -72,7 +73,7 @@
 
         const chg = document.getElementById('change');
         chg.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '% (24h)';
-        chg.style.color = change >= 0 ? '#228b22' : '#b22222';
+        chg.style.color = change >= 0 ? '#006400' : '#b22222';
 
         const now = new Date();
         document.getElementById('time').textContent =
@@ -87,6 +88,7 @@
   </script>
 </body>
 </html>
+
 
 
 
