@@ -8,48 +8,48 @@
     html, body {
       height: 100%;
       margin: 0;
-      background: transparent; /* show Start.me background */
+      background: transparent;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Arial, sans-serif;
-      color: #111;                 /* dark text */
       display: flex;
       align-items: center;
       justify-content: center;
     }
     .wrapper {
-      width: 100%;
-      height: 100%;
-      box-sizing: border-box;
-      padding: 8px;                /* small padding to shrink overall height */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       background: rgba(255,255,255,0.6);
       border-radius: 10px;
       text-align: center;
+      padding: 4px 6px;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
     }
     .label {
-      margin: 0;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      font-size: 12px;             /* fixed small label */
+      font-size: 10px;
       color: #333;
-      line-height: 1.1;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 2px;
     }
     .price {
-      margin: 4px 0 0 0;
-      font-weight: 700;
-      font-size: 32px;             /* tuned for “small” tile */
-      line-height: 1.0;
+      font-size: 22px;
+      font-weight: bold;
       color: #111;
+      margin: 0;
+      line-height: 1.1;
       white-space: nowrap;
     }
     .change {
-      margin: 2px 0 0 0;
-      font-size: 12px;
-      line-height: 1.0;
+      font-size: 10px;
+      margin-top: 2px;
     }
     .time {
-      margin: 2px 0 0 0;
-      font-size: 11px;
-      color: #555;
-      line-height: 1.0;
+      font-size: 9px;
+      color: #666;
+      margin-top: 2px;
     }
   </style>
 </head>
@@ -64,24 +64,19 @@
   <script>
     async function updatePrice() {
       try {
-        // Use RAW endpoint so Start.me iframe doesn't block it
         const url = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=aud&include_24hr_change=true';
         const res = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url), { cache: 'no-store' });
         const data = await res.json();
-
         const price = data.bitcoin.aud;
         const change = data.bitcoin.aud_24h_change;
-
-        document.getElementById('price').textContent =
-          '$' + price.toLocaleString('en-AU', { maximumFractionDigits: 0 }) + ' AUD';
-
+        
+        document.getElementById('price').textContent = '$' + price.toLocaleString('en-AU', { maximumFractionDigits: 0 }) + ' AUD';
         const chg = document.getElementById('change');
         chg.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '% (24h)';
         chg.style.color = change >= 0 ? '#228b22' : '#b22222';
-
+        
         const now = new Date();
-        document.getElementById('time').textContent =
-          'Updated ' + now.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('time').textContent = 'Updated ' + now.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
       } catch (err) {
         document.getElementById('price').textContent = 'Connection blocked';
         document.getElementById('change').textContent = '';
@@ -92,6 +87,7 @@
   </script>
 </body>
 </html>
+
 
 
 
