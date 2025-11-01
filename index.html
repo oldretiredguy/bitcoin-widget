@@ -27,51 +27,8 @@
     .label { font-size: 9px; color: #222; text-transform: uppercase; letter-spacing: 0.05em; margin: 0; }
     .price { font-size: 15px; font-weight: 700; color: #000; margin: 2px 0 1px 0; white-space: nowrap; }
     .change { font-size: 9px; margin: 0; }
-    .time { font-size: 8px; color: #333; margin: 0; }
-  </style>
-</head>
-<body>
-  <div class="wrapper">
-    <div class="label">₿ Bitcoin (AUD)</div>
-    <div id="price" class="price">Loading…</div>
-    <div id="change" class="change"></div>
-    <div id="time" class="time"></div>
-  </div>
+    .time { font-size: 8px; color: #333;
 
-  <script>
-    async function updatePrice() {
-      try {
-        // ✅ Uses AllOrigins (reliable open CORS passthrough)
-        const endpoint = 'https://api.allorigins.win/raw?url=' +
-          encodeURIComponent('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=aud&include_24hr_change=true');
-
-        const res = await fetch(endpoint, { cache: 'no-store' });
-        const data = await res.json();
-
-        const price = data.bitcoin.aud;
-        const change = data.bitcoin.aud_24h_change;
-
-        document.getElementById('price').textContent =
-          '$' + price.toLocaleString('en-AU', { maximumFractionDigits: 0 }) + ' AUD';
-
-        const chg = document.getElementById('change');
-        chg.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '% (24h)';
-        chg.style.color = change >= 0 ? '#006400' : '#b22222';
-
-        const now = new Date();
-        document.getElementById('time').textContent =
-          'Updated ' + now.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
-      } catch (err) {
-        document.getElementById('price').textContent = '⚠️ Connection blocked';
-        document.getElementById('change').textContent = '';
-      }
-    }
-
-    updatePrice();
-    setInterval(updatePrice, 60000);
-  </script>
-</body>
-</html>
 
 
 
