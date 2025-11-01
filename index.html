@@ -45,34 +45,12 @@
     }
   </style>
 </head>
-<body>
-  <div class="wrapper">
-    <div class="label">₿ Bitcoin (AUD)</div>
-    <div id="price" class="price">Loading…</div>
-    <div id="change" class="change"></div>
-    <div id="time" class="time"></div>
-  </div>
-  <script>
-    async function updatePrice() {
-      try {
-        const response = await fetch("https://api.allorigins.win/raw?url=https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=aud&include_24hr_change=true", {cache: 'no-store'});
-        const data = await response.json();
-        const price = data.bitcoin.aud;
-        const change = data.bitcoin.aud_24h_change;
-        document.getElementById('price').textContent = '$' + price.toLocaleString('en-AU', { maximumFractionDigits: 0 }) + ' AUD';
-        const chg = document.getElementById('change');
-        chg.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '% (24h)';
-        chg.style.color = change >= 0 ? '#228b22' : '#b22222';
-        const now = new Date();
-        document.getElementById('time').textContent = 'Updated ' + now.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
-      } catch (err) {
-        document.getElementById('price').textContent = 'Connection blocked';
-        document.getElementById('change').textContent = '';
-      }
-    }
-    updatePrice();
-    setInterval(updatePrice, 60000);
-  </script>
+<body style="display:flex;justify-content:center;align-items:center;height:100vh;background:#000;">
+  <a href="https://www.coingecko.com/en/coins/bitcoin/aud" target="_blank">
+    <img src="https://www.coingecko.com/coins/1/bitcoin-aud.png" 
+         alt="Bitcoin price" 
+         style="width:280px;height:auto;border-radius:10px;">
+  </a>
 </body>
 </html>
 
