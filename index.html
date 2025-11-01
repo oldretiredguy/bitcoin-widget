@@ -58,35 +58,37 @@
     <div id="time" class="time"></div>
   </div>
 
-  <script>
-    async function updatePrice() {
-      try {
-        // new public CORS proxy
-        const res = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=aud&include_24hr_change=true'));
-        const data = await res.json();
+ <script>
+  async function updatePrice() {
+    try {
+      // use a safer CORS passthrough (no-block)
+      const url = "https://corsproxy.io/?" + encodeURIComponent("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=aud&include_24hr_change=true");
+      const res = await fetch(url, { cache: "no-store" });
+      const data = await res.json();
 
-        const price = data.bitcoin.aud;
-        const change = data.bitcoin.aud_24h_change;
+      const price = data.bitcoin.aud;
+      const change = data.bitcoin.aud_24h_change;
 
-        document.getElementById('price').textContent =
-          '$' + price.toLocaleString('en-AU', { maximumFractionDigits: 0 }) + ' AUD';
+      document.getElementById("price").textContent =
+        "$" + price.toLocaleString("en-AU", { maximumFractionDigits: 0 }) + " AUD";
 
-        const chg = document.getElementById('change');
-        chg.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '% (24h)';
-        chg.style.color = change >= 0 ? '#006400' : '#b22222';
+      const chg = document.getElementById("change");
+      chg.textContent = (change >= 0 ? "+" : "") + change.toFixed(2) + "% (24h)";
+      chg.style.color = change >= 0 ? "#006400" : "#b22222";
 
-        const now = new Date();
-        document.getElementById('time').textContent =
-          'Updated ' + now.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
-      } catch (err) {
-        document.getElementById('price').textContent = '⚠️ API Blocked';
-        document.getElementById('change').textContent = '';
-      }
+      const now = new Date();
+      document.getElementById("time").textContent =
+        "Updated " + now.toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit" });
+    } catch (err) {
+      document.getElementById("price").textContent = "⚠️ Connection blocked";
+      document.getElementById("change").textContent = "";
     }
+  }
 
-    updatePrice();
-    setInterval(updatePrice, 60000);
-  </script>
+  updatePrice();
+  setInterval(updatePrice, 60000);
+</script>
+
 </body>
 </html>
 
