@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bitcoin AUD</title>
   <style>
     html, body {
       height: 100%;
       margin: 0;
-      background: #0e0f11;
-      color: #00ff66;
+      background: #000;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, Arial, sans-serif;
       display: flex;
       align-items: center;
@@ -17,29 +16,35 @@
     }
     .wrapper {
       text-align: center;
-      padding: 1em;
-      width: 90%;
-      max-width: 480px;
-    }
-    .label {
-      color: #8a8f98;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-size: clamp(12px, 2vw, 16px);
+      padding: 12px;
+      width: 100%;
+      max-width: 400px;
+      color: #000;
+      background: #9eff9e;
+      border-radius: 8px;
+      box-sizing: border-box;
     }
     .price {
-      font-size: clamp(28px, 6vw, 52px);
-      font-weight: bold;
-      margin: 0.4em 0 0.2em 0;
-      color: #00e676;
+      font-size: 42px;
+      font-weight: 800;
+      margin: 0;
+      line-height: 1.1;
+    }
+    .label {
+      font-size: 12px;
+      text-transform: uppercase;
+      color: #111;
+      margin-bottom: 6px;
     }
     .change {
-      font-size: clamp(12px, 2.5vw, 16px);
-      margin-bottom: 0.3em;
+      font-size: 13px;
+      margin-top: 4px;
+      color: #111;
     }
     .time {
-      font-size: clamp(10px, 2vw, 13px);
-      color: #8a8f98;
+      font-size: 10px;
+      color: #333;
+      margin-top: 3px;
     }
   </style>
 </head>
@@ -53,14 +58,16 @@
   <script>
     async function updatePrice() {
       try {
-        const response = await fetch("https://api.allorigins.win/raw?url=https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=aud&include_24hr_change=true", {cache: 'no-store'});
-        const data = await res.json();
+        const response = await fetch("https://api.allorigins.win/raw?url=" + encodeURIComponent("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=aud&include_24hr_change=true"), {cache: 'no-store'});
+        const data = await response.json();
         const price = data.bitcoin.aud;
         const change = data.bitcoin.aud_24h_change;
+
         document.getElementById('price').textContent = '$' + price.toLocaleString('en-AU', { maximumFractionDigits: 0 }) + ' AUD';
         const chg = document.getElementById('change');
         chg.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '% (24h)';
-        chg.style.color = change >= 0 ? '#00e676' : '#ff4d4d';
+        chg.style.color = change >= 0 ? '#0c0' : '#c00';
+
         const now = new Date();
         document.getElementById('time').textContent = 'Updated ' + now.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
       } catch (err) {
@@ -73,6 +80,7 @@
   </script>
 </body>
 </html>
+
 
 
 
