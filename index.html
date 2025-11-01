@@ -1,49 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bitcoin AUD</title>
   <style>
     html, body {
       height: 100%;
       margin: 0;
-      background: transparent;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, Arial, sans-serif;
-      color: #111;
+      background: transparent; /* show Start.me background */
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+      color: #111;                 /* dark text */
       display: flex;
       align-items: center;
       justify-content: center;
     }
     .wrapper {
-      text-align: center;
-      padding: 0.4em 0.6em;
       width: 100%;
-      max-width: 340px;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 8px;                /* small padding to shrink overall height */
       background: rgba(255,255,255,0.6);
       border-radius: 10px;
-      line-height: 1.1em;
+      text-align: center;
     }
     .label {
+      margin: 0;
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      font-size: clamp(9px, 1.5vw, 12px);
+      font-size: 12px;             /* fixed small label */
       color: #333;
-      margin-bottom: 0.3em;
+      line-height: 1.1;
     }
     .price {
-      font-size: clamp(26px, 5vw, 38px);
+      margin: 4px 0 0 0;
       font-weight: 700;
-      margin: 0.1em 0;
+      font-size: 32px;             /* tuned for “small” tile */
+      line-height: 1.0;
       color: #111;
+      white-space: nowrap;
     }
     .change {
-      font-size: clamp(11px, 2vw, 14px);
-      margin: 0.1em 0;
+      margin: 2px 0 0 0;
+      font-size: 12px;
+      line-height: 1.0;
     }
     .time {
-      font-size: clamp(9px, 1.8vw, 11px);
+      margin: 2px 0 0 0;
+      font-size: 11px;
       color: #555;
+      line-height: 1.0;
     }
   </style>
 </head>
@@ -58,9 +64,10 @@
   <script>
     async function updatePrice() {
       try {
-        const res = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=aud&include_24hr_change=true'), { cache: 'no-store' });
-        const raw = await res.json();
-        const data = JSON.parse(raw.contents);
+        // Use RAW endpoint so Start.me iframe doesn't block it
+        const url = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=aud&include_24hr_change=true';
+        const res = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url), { cache: 'no-store' });
+        const data = await res.json();
 
         const price = data.bitcoin.aud;
         const change = data.bitcoin.aud_24h_change;
@@ -85,6 +92,7 @@
   </script>
 </body>
 </html>
+
 
 
 
