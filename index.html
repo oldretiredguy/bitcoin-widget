@@ -8,38 +8,48 @@
     html, body {
       height: 100%;
       margin: 0;
-      background: #0e0f11;
-      color: #00ff66;
+      background: linear-gradient(180deg, #2b210f 0%, #0c0b09 100%);
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, Arial, sans-serif;
+      color: #f5d77a;
       display: flex;
       align-items: center;
       justify-content: center;
     }
+
     .wrapper {
       text-align: center;
       padding: 1em;
       width: 90%;
       max-width: 480px;
+      border: 1px solid rgba(255, 215, 100, 0.25);
+      border-radius: 12px;
+      box-shadow: 0 0 18px rgba(255, 215, 100, 0.1);
+      background: rgba(0, 0, 0, 0.3);
     }
+
     .label {
-      color: #8a8f98;
+      color: #c7b56e;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-size: clamp(12px, 2vw, 16px);
+      letter-spacing: 0.07em;
+      font-size: clamp(12px, 2vw, 15px);
     }
+
     .price {
-      font-size: clamp(28px, 6vw, 52px);
-      font-weight: bold;
+      font-size: clamp(28px, 6vw, 54px);
+      font-weight: 700;
       margin: 0.4em 0 0.2em 0;
-      color: #00e676;
+      color: #f5d77a;
+      text-shadow: 0 0 8px rgba(245, 215, 122, 0.4);
     }
+
     .change {
       font-size: clamp(12px, 2.5vw, 16px);
       margin-bottom: 0.3em;
     }
+
     .time {
       font-size: clamp(10px, 2vw, 13px);
-      color: #8a8f98;
+      color: #c7b56e;
     }
   </style>
 </head>
@@ -50,6 +60,7 @@
     <div id="change" class="change"></div>
     <div id="time" class="time"></div>
   </div>
+
   <script>
     async function updatePrice() {
       try {
@@ -57,10 +68,13 @@
         const data = await res.json();
         const price = data.bitcoin.aud;
         const change = data.bitcoin.aud_24h_change;
+
         document.getElementById('price').textContent = '$' + price.toLocaleString('en-AU', { maximumFractionDigits: 0 }) + ' AUD';
+
         const chg = document.getElementById('change');
         chg.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '% (24h)';
-        chg.style.color = change >= 0 ? '#00e676' : '#ff4d4d';
+        chg.style.color = change >= 0 ? '#89ff89' : '#ff8080';
+
         const now = new Date();
         document.getElementById('time').textContent = 'Updated ' + now.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
       } catch (err) {
@@ -73,3 +87,4 @@
   </script>
 </body>
 </html>
+
