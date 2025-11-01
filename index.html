@@ -8,47 +8,40 @@
     html, body {
       height: 100%;
       margin: 0;
-      background: transparent;
+      background: transparent; /* allows start.me background to show */
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, Arial, sans-serif;
+      color: #111; /* dark text */
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, Arial, sans-serif;
-      color: #111;
     }
-
     .wrapper {
       text-align: center;
       padding: 0.5em;
-      width: 90%;
-      max-width: 280px;
-      min-width: 180px;
+      width: 100%;
+      max-width: 380px;
+      background: rgba(255,255,255,0.6);
       border-radius: 10px;
-      background: rgba(255, 255, 255, 0.25); /* semi-transparent background */
-      backdrop-filter: blur(6px);
     }
-
     .label {
-      color: #333;
       text-transform: uppercase;
-      letter-spacing: 0.07em;
-      font-size: clamp(10px, 1.8vw, 13px);
+      letter-spacing: 0.06em;
+      font-size: clamp(10px, 2vw, 14px);
+      color: #333;
     }
-
     .price {
-      font-size: clamp(22px, 5vw, 38px);
+      font-size: clamp(28px, 6vw, 44px);
       font-weight: 700;
-      margin: 0.3em 0 0.1em 0;
-      color: #000;
+      margin: 0.2em 0 0.1em 0;
+      color: #111;
     }
-
     .change {
-      font-size: clamp(10px, 2vw, 13px);
+      font-size: clamp(12px, 2.5vw, 15px);
       margin-bottom: 0.3em;
     }
-
     .time {
-      font-size: clamp(9px, 1.8vw, 12px);
-      color: #444;
+      font-size: clamp(10px, 2vw, 12px);
+      color: #555;
     }
   </style>
 </head>
@@ -57,7 +50,35 @@
     <div class="label">₿ Bitcoin (AUD)</div>
     <div id="price" class="price">Loading…</div>
     <div id="change" class="change"></div>
-    <div id="time" class="time">
+    <div id="time" class="time"></div>
+  </div>
+
+  <script>
+    async function updatePrice() {
+      try {
+        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=aud&include_24hr_change=true', { cache: 'no-store' });
+        const data = await res.json();
+        const price = data.bitcoin.aud;
+        const change = data.bitcoin.aud_24h_change;
+
+        document.getElementById('price').textContent = '$' + price.toLocaleString('en-AU', { maximumFractionDigits: 0 }) + ' AUD';
+
+        const chg = document.getElementById('change');
+        chg.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '% (24h)';
+        chg.style.color = change >= 0 ? '#228b22' : '#b22222'; // green/red for gains/losses
+
+        const now = new Date();
+        document.getElementById('time').textContent = 'Updated ' + now.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
+      } catch (err) {
+        document.getElementById('price').textContent = 'Connection blocked';
+        document.getElementById('change').textContent = '';
+      }
+    }
+    updatePrice();
+    setInterval(updatePrice, 60000);
+  </script>
+</body>
+</html>
 
 
 
