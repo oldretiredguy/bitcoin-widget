@@ -41,26 +41,18 @@
   <script>
     async function updatePrice() {
       try {
-        // Using JSONBin passthrough proxy (works on GitHub Pages)
-        const proxyUrl = "https://api.jsonbin.io/v3/b/";
-        const apiUrl = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=aud&include_24hr_change=true";
-
-        const response = await fetch("https://api.allorigins.win/raw?url=" + encodeURIComponent(apiUrl));
+        // Use Yahoo Finance — works on GitHub Pages (no CORS block)
+        const response = await fetch("https://query1.finance.yahoo.com/v8/finance/chart/BTC-AUD?interval=1h", { cache: "no-store" });
         const data = await response.json();
+        const price = data.chart.result[0].meta.regularMarketPrice;
 
-        const price = data.bitcoin.aud;
-        const change = data.bitcoin.aud_24h_change;
-
-        document.getElementById("price").textContent =
-          "$" + price.toLocaleString("en-AU", { maximumFractionDigits: 0 }) + " AUD";
-
-        const chg = document.getElementById("change");
-        chg.textContent = (change >= 0 ? "+" : "") + change.toFixed(2) + "% (24h)";
-        chg.style.color = change >= 0 ? "#006400" : "#b22222";
+        // No 24h change available via this API — fake a placeholder
+        document.getElementById("price").textContent = "$" + price.toLocaleString("en-AU", { maximumFractionDigits: 0 }) + " AUD";
+        document.getElementById("change").textContent = "(24h change unavailable)";
+        document.getElementById("change").style.color = "#333";
 
         const now = new Date();
-        document.getElementById("time").textContent =
-          "Updated " + now.toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit" });
+        document.getElementById("time").textContent = "Updated " + now.toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit" });
       } catch (err) {
         document.getElementById("price").textContent = "⚠️ Connection blocked";
         document.getElementById("change").textContent = "";
@@ -72,6 +64,7 @@
   </script>
 </body>
 </html>
+
 
 
 
