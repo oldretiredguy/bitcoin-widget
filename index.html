@@ -8,45 +8,40 @@
     html, body {
       height: 100%;
       margin: 0;
-      background: transparent;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+      background: transparent; /* allows start.me background to show */
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, Arial, sans-serif;
+      color: #111; /* dark text */
       display: flex;
       align-items: center;
       justify-content: center;
     }
     .wrapper {
-      width: 100%;
-      height: 100%;
-      box-sizing: border-box;
-      padding: 4px;
-      background: rgba(255, 255, 255, 0.4);
-      backdrop-filter: blur(6px);
-      border-radius: 8px;
       text-align: center;
-      line-height: 1.1;
+      padding: 0.5em;
+      width: 100%;
+      max-width: 380px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 10px;
     }
     .label {
-      font-size: 8px;
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      color: #222;
-      margin: 0;
+      font-size: clamp(10px, 2vw, 14px);
+      color: #333;
     }
     .price {
-      font-size: 16px;
+      font-size: clamp(28px, 6vw, 44px);
       font-weight: 700;
-      color: #000;
-      margin: 2px 0 0 0;
-      white-space: nowrap;
+      margin: 0.2em 0 0.1em 0;
+      color: #111;
     }
     .change {
-      font-size: 8px;
-      margin: 1px 0 0 0;
+      font-size: clamp(12px, 2.5vw, 15px);
+      margin-bottom: 0.3em;
     }
     .time {
-      font-size: 7px;
-      color: #333;
-      margin: 0;
+      font-size: clamp(10px, 2vw, 12px);
+      color: #555;
     }
   </style>
 </head>
@@ -61,33 +56,8 @@
   <script>
     async function updatePrice() {
       try {
-        const url = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=aud&include_24hr_change=true';
-        const res = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url), { cache: 'no-store' });
-        const data = await res.json();
+        const res = await fetch('https://api.allorigins.win/get?url=' +
 
-        const price = data.bitcoin.aud;
-        const change = data.bitcoin.aud_24h_change;
-
-        document.getElementById('price').textContent =
-          '$' + price.toLocaleString('en-AU', { maximumFractionDigits: 0 }) + ' AUD';
-
-        const chg = document.getElementById('change');
-        chg.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '% (24h)';
-        chg.style.color = change >= 0 ? '#006400' : '#b22222';
-
-        const now = new Date();
-        document.getElementById('time').textContent =
-          'Updated ' + now.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
-      } catch (err) {
-        document.getElementById('price').textContent = 'Connection blocked';
-        document.getElementById('change').textContent = '';
-      }
-    }
-    updatePrice();
-    setInterval(updatePrice, 60000);
-  </script>
-</body>
-</html>
 
 
 
