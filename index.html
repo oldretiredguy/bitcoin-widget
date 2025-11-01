@@ -1,56 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bitcoin AUD</title>
   <style>
     html, body {
       height: 100%;
       margin: 0;
-      background: transparent;
+      background: #0e0f11;
+      color: #00ff66;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, Arial, sans-serif;
-      color: #111;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     .wrapper {
       text-align: center;
-      padding: 8px;
-      width: 100%;
-      max-width: 340px;
-      background: rgba(255,255,255,0.6);
-      border-radius: 10px;
+      padding: 1em;
+      width: 90%;
+      max-width: 480px;
     }
     .label {
-      font-size: 11px;
+      color: #8a8f98;
       text-transform: uppercase;
-      color: #333;
       letter-spacing: 0.05em;
+      font-size: clamp(12px, 2vw, 16px);
     }
     .price {
-      font-size: 30px;
-      font-weight: 700;
-      margin: 4px 0;
-      color: #111;
+      font-size: clamp(28px, 6vw, 52px);
+      font-weight: bold;
+      margin: 0.4em 0 0.2em 0;
+      color: #00e676;
     }
     .change {
-      font-size: 12px;
-      margin-bottom: 2px;
+      font-size: clamp(12px, 2.5vw, 16px);
+      margin-bottom: 0.3em;
     }
     .time {
-      font-size: 10px;
-      color: #555;
+      font-size: clamp(10px, 2vw, 13px);
+      color: #8a8f98;
     }
   </style>
 </head>
-<body style="display:flex;justify-content:center;align-items:center;height:100vh;background:#000;">
-  <a href="https://www.coingecko.com/en/coins/bitcoin/aud" target="_blank">
-    <img src="https://www.coingecko.com/coins/1/bitcoin-aud.png" 
-         alt="Bitcoin price" 
-         style="width:280px;height:auto;border-radius:10px;">
-  </a>
+<body>
+  <div class="wrapper">
+    <div class="label">₿ Bitcoin (AUD)</div>
+    <div id="price" class="price">Loading…</div>
+    <div id="change" class="change"></div>
+    <div id="time" class="time"></div>
+  </div>
+  <script>
+    async function updatePrice() {
+      try {
+        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=aud&include_24hr_change=true', { cache: 'no-store' });
+        const data = await res.json();
+        const price = data.bitcoin.aud;
+        const change = data.bitcoin.aud_24h_change;
+        document.getElementById('price').textContent = '$' + price.toLocaleString('en-AU', { maximumFractionDigits: 0 }) + ' AUD';
+        const chg = document.getElementById('change');
+        chg.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '% (24h)';
+        chg.style.color = change >= 0 ? '#00e676' : '#ff4d4d';
+        const now = new Date();
+        document.getElementById('time').textContent = 'Updated ' + now.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
+      } catch (err) {
+        document.getElementById('price').textContent = 'Connection blocked';
+        document.getElementById('change').textContent = '';
+      }
+    }
+    updatePrice();
+    setInterval(updatePrice, 60000);
+  </script>
 </body>
 </html>
 
