@@ -9,48 +9,53 @@
       height: 100%;
       margin: 0;
       background: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+      color: #111;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, Arial, sans-serif;
-      color: #111;
     }
     .wrapper {
-      text-align: center;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 6px;
       background: rgba(255,255,255,0.6);
       border-radius: 10px;
-      padding: 0.6em;
-      width: 100%;
-      max-width: 360px;
+      text-align: center;
     }
     .label {
+      margin: 0;
       text-transform: uppercase;
-      font-size: 12px;
+      letter-spacing: 0.06em;
+      font-size: 10px;
       color: #333;
-      margin-bottom: 4px;
     }
     .price {
-      font-size: 34px;
+      margin: 2px 0 0 0;
       font-weight: 700;
-      color: #111;
-      margin: 0;
+      font-size: 22px; /* smaller main number */
       line-height: 1.1;
+      color: #111;
+      white-space: nowrap;
     }
     .change {
-      font-size: 13px;
-      margin-top: 2px;
+      margin: 1px 0 0 0;
+      font-size: 10px;
+      line-height: 1.0;
     }
     .time {
-      font-size: 11px;
+      margin: 1px 0 0 0;
+      font-size: 9px;
       color: #555;
-      margin-top: 2px;
+      line-height: 1.0;
     }
   </style>
 </head>
 <body>
   <div class="wrapper">
     <div class="label">₿ Bitcoin (AUD)</div>
-    <div id="price" class="price">Loading...</div>
+    <div id="price" class="price">Loading…</div>
     <div id="change" class="change"></div>
     <div id="time" class="time"></div>
   </div>
@@ -58,35 +63,28 @@
   <script>
     async function updatePrice() {
       try {
-        // Use CodeTabs proxy to bypass iframe restrictions
-        const proxy = "https://api.codetabs.com/v1/proxy?quest=";
-        const target = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=aud&include_24hr_change=true";
-        const res = await fetch(proxy + encodeURIComponent(target), { cache: "no-store" });
-
-        if (!res.ok) throw new Error("Network error");
+        const url = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=aud&include_24hr_change=true';
+        const res = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url), { cache: 'no-store' });
         const data = await res.json();
-        if (!data.bitcoin) throw new Error("Invalid data");
 
         const price = data.bitcoin.aud;
         const change = data.bitcoin.aud_24h_change;
 
-        document.getElementById("price").textContent =
-          "$" + price.toLocaleString("en-AU", { maximumFractionDigits: 0 }) + " AUD";
+        document.getElementById('price').textContent =
+          '$' + price.toLocaleString('en-AU', { maximumFractionDigits: 0 }) + ' AUD';
 
-        const chg = document.getElementById("change");
-        chg.textContent = (change >= 0 ? "+" : "") + change.toFixed(2) + "% (24h)";
-        chg.style.color = change >= 0 ? "#228b22" : "#b22222";
+        const chg = document.getElementById('change');
+        chg.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '% (24h)';
+        chg.style.color = change >= 0 ? '#228b22' : '#b22222';
 
         const now = new Date();
-        document.getElementById("time").textContent =
-          "Updated " + now.toLocaleTimeString("en-AU", { hour: "2-digit", minute: "2-digit" });
+        document.getElementById('time').textContent =
+          'Updated ' + now.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
       } catch (err) {
-        document.getElementById("price").textContent = "Connection blocked";
-        document.getElementById("change").textContent = "";
-        console.error(err);
+        document.getElementById('price').textContent = 'Connection blocked';
+        document.getElementById('change').textContent = '';
       }
     }
-
     updatePrice();
     setInterval(updatePrice, 60000);
   </script>
