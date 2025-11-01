@@ -6,50 +6,46 @@
   <title>Bitcoin AUD</title>
   <style>
     html, body {
-      height: 100%;
       margin: 0;
-      background: transparent;
+      background: transparent; /* fully clear for dashboard harmony */
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, Arial, sans-serif;
       color: #f5d77a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .wrapper {
+      display: inline-block;
       text-align: center;
-      padding: 1em;
-      width: 90%;
-      max-width: 480px;
-      border: 1px solid rgba(255, 215, 100, 0.25);
+      padding: 0.8em 1em;
+      width: 240px;
+      border: 1px solid rgba(255, 215, 100, 0.3);
       border-radius: 12px;
-      box-shadow: 0 0 18px rgba(255, 215, 100, 0.1);
-      background: rgba(0, 0, 0, 0.2);
-
+      background: linear-gradient(180deg, rgba(255,215,100,0.12) 0%, rgba(0,0,0,0.25) 100%);
+      box-shadow: 0 0 15px rgba(255,215,100,0.2);
     }
 
     .label {
       color: #c7b56e;
       text-transform: uppercase;
       letter-spacing: 0.07em;
-      font-size: clamp(12px, 2vw, 15px);
+      font-size: 12px;
+      margin-bottom: 4px;
     }
 
     .price {
-      font-size: clamp(28px, 6vw, 54px);
+      font-size: 32px;
       font-weight: 700;
-      margin: 0.4em 0 0.2em 0;
       color: #f5d77a;
-      text-shadow: 0 0 8px rgba(245, 215, 122, 0.4);
+      text-shadow: 0 0 6px rgba(245,215,122,0.4);
+      margin: 0.2em 0;
     }
 
     .change {
-      font-size: clamp(12px, 2.5vw, 16px);
-      margin-bottom: 0.3em;
+      font-size: 13px;
+      margin-bottom: 2px;
     }
 
     .time {
-      font-size: clamp(10px, 2vw, 13px);
+      font-size: 11px;
       color: #c7b56e;
     }
   </style>
@@ -69,13 +65,10 @@
         const data = await res.json();
         const price = data.bitcoin.aud;
         const change = data.bitcoin.aud_24h_change;
-
         document.getElementById('price').textContent = '$' + price.toLocaleString('en-AU', { maximumFractionDigits: 0 }) + ' AUD';
-
         const chg = document.getElementById('change');
         chg.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '% (24h)';
-        chg.style.color = change >= 0 ? '#89ff89' : '#ff8080';
-
+        chg.style.color = change >= 0 ? '#00e676' : '#ff4d4d';
         const now = new Date();
         document.getElementById('time').textContent = 'Updated ' + now.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
       } catch (err) {
@@ -88,4 +81,5 @@
   </script>
 </body>
 </html>
+
 
